@@ -1,0 +1,20 @@
+@id = 2
+
+### Get all the notes
+GET http://localhost:8080/notes
+
+### Get a single note by ID
+GET http://localhost:8080/notes/{{id}}
+
+### Create a new note
+POST http://localhost:8080/notes
+Content-Type: application/json
+
+{
+  "title": "Moja notatka",
+  "content": "To jest moja notatka.",
+  "authorId": 1
+}
+
+### Delete a note by ID
+DELETE localhost:8080/notes/{{id}}
