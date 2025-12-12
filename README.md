@@ -38,3 +38,8 @@ classDiagram
     - `GET /notes` - pobranie listy wszystkich notatek
     - `GET /notes/{id}` - pobranie notatki po ID
     - `DELETE /notes/{id}` - usunięcie notatki po ID
+
+## Dodatkowe informacje
+
+- Swagger jest dostępny pod adresem: `http:localhost:8080/swagger-ui.html`
+- Konsola H2 jest dostępna pod adresem: `http:localhost:8080/h2`
