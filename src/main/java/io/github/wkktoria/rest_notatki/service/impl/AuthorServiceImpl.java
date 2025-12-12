@@ -4,6 +4,7 @@ import io.github.wkktoria.rest_notatki.dto.author.AuthorDto;
 import io.github.wkktoria.rest_notatki.dto.author.CreateAuthorDto;
 import io.github.wkktoria.rest_notatki.entity.Author;
 import io.github.wkktoria.rest_notatki.exception.NotFoundException;
+import io.github.wkktoria.rest_notatki.mapper.AuthorMapper;
 import io.github.wkktoria.rest_notatki.repository.AuthorRepository;
 import io.github.wkktoria.rest_notatki.service.AuthorService;
 import lombok.AllArgsConstructor;
@@ -17,20 +18,15 @@ public class AuthorServiceImpl implements AuthorService {
 
     private static final String AUTHOR_NOT_FOUND_MESSAGE = "Nie znaleziono autora o podanym ID";
 
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
+    private final AuthorMapper authorMapper;
 
     @Override
     public AuthorDto createAuthor(final CreateAuthorDto createAuthorDto) {
-        Author author = Author.builder()
-                .name(createAuthorDto.getName())
-                .build();
-
+        Author author = authorMapper.toEntity(createAuthorDto);
         Author saved = authorRepository.save(author);
 
-        return AuthorDto.builder()
-                .id(saved.getId())
-                .name(saved.getName())
-                .build();
+        return authorMapper.toDto(saved);
     }
 
     @Override
@@ -38,19 +34,13 @@ public class AuthorServiceImpl implements AuthorService {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(AUTHOR_NOT_FOUND_MESSAGE));
 
-        return AuthorDto.builder()
-                .id(author.getId())
-                .name(author.getName())
-                .build();
+        return authorMapper.toDto(author);
     }
 
     @Override
     public List<AuthorDto> getAllAuthors() {
         return authorRepository.findAll().stream()
-                .map(author -> AuthorDto.builder()
-                        .id(author.getId())
-                        .name(author.getName())
-                        .build())
+                .map(authorMapper::toDto)
                 .toList();
     }
 

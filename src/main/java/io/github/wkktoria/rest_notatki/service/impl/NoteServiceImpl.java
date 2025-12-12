@@ -1,11 +1,11 @@
 package io.github.wkktoria.rest_notatki.service.impl;
 
-import io.github.wkktoria.rest_notatki.dto.author.AuthorDto;
 import io.github.wkktoria.rest_notatki.dto.note.CreateNoteDto;
 import io.github.wkktoria.rest_notatki.dto.note.NoteDto;
 import io.github.wkktoria.rest_notatki.entity.Author;
 import io.github.wkktoria.rest_notatki.entity.Note;
 import io.github.wkktoria.rest_notatki.exception.NotFoundException;
+import io.github.wkktoria.rest_notatki.mapper.NoteMapper;
 import io.github.wkktoria.rest_notatki.repository.AuthorRepository;
 import io.github.wkktoria.rest_notatki.repository.NoteRepository;
 import io.github.wkktoria.rest_notatki.service.NoteService;
@@ -23,31 +23,17 @@ public class NoteServiceImpl implements NoteService {
 
     private final NoteRepository noteRepository;
     private final AuthorRepository authorRepository;
-
+    private final NoteMapper noteMapper;
 
     @Override
     public NoteDto createNote(final CreateNoteDto createNoteDto) {
         Author author = authorRepository.findById(createNoteDto.getAuthorId())
                 .orElseThrow(() -> new NotFoundException(AUTHOR_NOT_FOUND_MESSAGE));
 
-        Note note = Note.builder()
-                .title(createNoteDto.getTitle())
-                .content(createNoteDto.getContent())
-                .author(author)
-                .build();
-
+        Note note = noteMapper.toEntity(createNoteDto, author);
         Note saved = noteRepository.save(note);
 
-        return NoteDto.builder()
-                .id(saved.getId())
-                .title(saved.getTitle())
-                .content(saved.getContent())
-                .createdAt(note.getCreatedAt())
-                .author(AuthorDto.builder()
-                        .id(saved.getAuthor().getId())
-                        .name(saved.getAuthor().getName())
-                        .build())
-                .build();
+        return noteMapper.toDto(saved);
     }
 
     @Override
@@ -55,31 +41,13 @@ public class NoteServiceImpl implements NoteService {
         Note note = noteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(NOTE_NOT_FOUND_MESSAGE));
 
-        return NoteDto.builder()
-                .id(note.getId())
-                .title(note.getTitle())
-                .content(note.getContent())
-                .createdAt(note.getCreatedAt())
-                .author(AuthorDto.builder()
-                        .id(note.getAuthor().getId())
-                        .name(note.getAuthor().getName())
-                        .build())
-                .build();
+        return noteMapper.toDto(note);
     }
 
     @Override
     public List<NoteDto> getAllNotes() {
         return noteRepository.findAll().stream()
-                .map(note -> NoteDto.builder()
-                        .id(note.getId())
-                        .title(note.getTitle())
-                        .content(note.getContent())
-                        .createdAt(note.getCreatedAt())
-                        .author(AuthorDto.builder()
-                                .id(note.getAuthor().getId())
-                                .name(note.getAuthor().getName())
-                                .build())
-                        .build())
+                .map(noteMapper::toDto)
                 .toList();
     }
 
