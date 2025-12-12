@@ -71,4 +71,20 @@ class AuthorRepositoryTest {
         Assertions.assertNotNull(returnAuthor);
     }
 
+    @Test
+    void AuthorRepository_ExistsByNameIgnoreCase_ReturnsTrueWhenAuthorExists() {
+        // Arrange
+        Author author = Author.builder()
+                .name("Jan Kowalski")
+                .build();
+
+        authorRepository.save(author);
+
+        // Act
+        boolean result = authorRepository.existsByNameIgnoreCase(author.getName());
+
+        // Assert
+        Assertions.assertTrue(result);
+    }
+
 }

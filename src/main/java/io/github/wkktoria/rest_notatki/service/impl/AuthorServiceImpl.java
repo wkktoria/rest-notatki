@@ -3,6 +3,7 @@ package io.github.wkktoria.rest_notatki.service.impl;
 import io.github.wkktoria.rest_notatki.dto.author.AuthorDto;
 import io.github.wkktoria.rest_notatki.dto.author.CreateAuthorDto;
 import io.github.wkktoria.rest_notatki.entity.Author;
+import io.github.wkktoria.rest_notatki.exception.ConflictException;
 import io.github.wkktoria.rest_notatki.exception.NotFoundException;
 import io.github.wkktoria.rest_notatki.mapper.AuthorMapper;
 import io.github.wkktoria.rest_notatki.repository.AuthorRepository;
@@ -17,12 +18,17 @@ import java.util.List;
 public class AuthorServiceImpl implements AuthorService {
 
     private static final String AUTHOR_NOT_FOUND_MESSAGE = "Nie znaleziono autora o podanym ID";
+    private static final String AUTHOR_EXISTS_MESSAGE = "Istnieje już autor o takiej nazwie";
 
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
 
     @Override
     public AuthorDto createAuthor(final CreateAuthorDto createAuthorDto) {
+        if (authorRepository.existsByNameIgnoreCase(createAuthorDto.getName())) {
+            throw new ConflictException(AUTHOR_EXISTS_MESSAGE);
+        }
+
         Author author = authorMapper.toEntity(createAuthorDto);
         Author saved = authorRepository.save(author);
 
