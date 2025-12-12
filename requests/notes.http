@@ -1,7 +1,11 @@
 @id = 1
+@authorId=1
 
 ### Get all the notes
 GET http://localhost:8080/notes
+
+### Get the notes by author's ID
+GET http://localhost:8080/notes?authorId={{authorId}}
 
 ### Get a single note by ID
 GET http://localhost:8080/notes/{{id}}

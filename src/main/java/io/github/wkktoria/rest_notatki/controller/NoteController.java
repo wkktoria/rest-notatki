@@ -35,7 +35,10 @@ public class NoteController {
                     content = @Content(mediaType = "text/plain")
             )
     })
-    public ResponseEntity<List<NoteDto>> getNotes() {
+    public ResponseEntity<List<NoteDto>> getNotes(@RequestParam(value = "authorId", required = false) final Long authorId) {
+        if (authorId != null) {
+            return ResponseEntity.ok(noteService.getNotesByAuthor(authorId));
+        }
         return ResponseEntity.ok(noteService.getAllNotes());
     }
 

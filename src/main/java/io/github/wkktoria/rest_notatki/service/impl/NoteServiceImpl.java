@@ -52,6 +52,13 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    public List<NoteDto> getNotesByAuthor(final long authorId) {
+        return noteRepository.findByAuthorId(authorId).stream()
+                .map(noteMapper::toDto)
+                .toList();
+    }
+
+    @Override
     public void deleteNoteById(final long id) {
         Note note = noteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(NOTE_NOT_FOUND_MESSAGE));

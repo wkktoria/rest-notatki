@@ -29,6 +29,8 @@ classDiagram
 
 ## Funkcjonalności API
 
+### Wymagane
+
 - Authors:
     - `POST /authors` - utworzenie nowego autora
     - `GET /authors` - pobranie listy wszystkich autorów
@@ -38,6 +40,11 @@ classDiagram
     - `GET /notes` - pobranie listy wszystkich notatek
     - `GET /notes/{id}` - pobranie notatki po ID
     - `DELETE /notes/{id}` - usunięcie notatki po ID
+
+### Dodatkowe
+
+- Notes:
+    - `GET /notes?authorId={authorId}` - pobranie listy notatek po ID autora
 
 ## Dodatkowe informacje
 

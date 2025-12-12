@@ -13,6 +13,8 @@ public interface NoteService {
 
     List<NoteDto> getAllNotes();
 
+    List<NoteDto> getNotesByAuthor(final long authorId);
+
     void deleteNoteById(final long id);
 
 }
